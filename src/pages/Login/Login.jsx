@@ -25,14 +25,36 @@ export default function Login() {
 
       const response = await login(email, password);
 
+      console.log("========== LOGIN RESPONSE ==========");
+      console.log(response);
+      console.log("Access Token:", response.access_token);
+      console.log("===================================");
+
+      if (!response.access_token) {
+        setError("Access token not found in response.");
+        return;
+      }
+
       localStorage.setItem("access_token", response.access_token);
+
+      console.log(
+        "Saved Token:",
+        localStorage.getItem("access_token")
+      );
 
       navigate("/dashboard");
     } catch (err) {
-      if (err.response?.data?.detail) {
-        setError(err.response.data.detail);
+      console.error("LOGIN ERROR:", err);
+
+      if (err.response) {
+        console.log("Status:", err.response.status);
+        console.log("Data:", err.response.data);
+
+        setError(
+          err.response.data?.detail || "Login failed."
+        );
       } else {
-        setError("Login failed. Please try again.");
+        setError("Unable to connect to server.");
       }
     } finally {
       setLoading(false);
@@ -92,9 +114,7 @@ export default function Login() {
 
         <p className="register-text">
           Don't have an account?
-          <span
-            onClick={() => navigate("/register")}
-          >
+          <span onClick={() => navigate("/register")}>
             Create Account
           </span>
         </p>
