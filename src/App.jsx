@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login/Login";
-import Register from "./pages/Register/Register";
+import Onboarding from "./pages/Onboarding/Onboarding";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Recommendations from "./pages/Recommendations/Recommendations";
 import MealLog from "./pages/MealLog/MealLog";
@@ -25,7 +25,7 @@ function App() {
 
             <Route path="/login" element={<Login />} />
 
-            <Route path="/register" element={<Register />} />
+            <Route path="/register" element={<Onboarding />} />
 
 
 
