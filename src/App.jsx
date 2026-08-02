@@ -11,6 +11,7 @@ import Menu from "./pages/Menu/Menu";
 import MyMeals from "./pages/MyMeals/MyMeals";
 
 import MainLayout from "./components/layout/MainLayout";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
 
@@ -18,7 +19,7 @@ function App() {
 
         <Routes>
 
-            {/* Public Routes */}
+            {/* ---------- Public Routes ---------- */}
 
             <Route path="/" element={<Login />} />
 
@@ -28,69 +29,158 @@ function App() {
 
 
 
-            {/* Protected Layout */}
+            {/* ---------- Protected Routes ---------- */}
 
             <Route
+
                 path="/dashboard"
+
                 element={
-                    <MainLayout>
-                        <Dashboard />
-                    </MainLayout>
+
+                    <ProtectedRoute>
+
+                        <MainLayout>
+
+                            <Dashboard />
+
+                        </MainLayout>
+
+                    </ProtectedRoute>
+
                 }
+
             />
 
+
+
             <Route
+
                 path="/recommendations"
+
                 element={
-                    <MainLayout>
-                        <Recommendations />
-                    </MainLayout>
+
+                    <ProtectedRoute>
+
+                        <MainLayout>
+
+                            <Recommendations />
+
+                        </MainLayout>
+
+                    </ProtectedRoute>
+
                 }
+
             />
 
+
+
             <Route
+
                 path="/meal-log"
+
                 element={
-                    <MainLayout>
-                        <MealLog />
-                    </MainLayout>
+
+                    <ProtectedRoute>
+
+                        <MainLayout>
+
+                            <MealLog />
+
+                        </MainLayout>
+
+                    </ProtectedRoute>
+
                 }
+
             />
 
+
+
             <Route
+
                 path="/profile"
+
                 element={
-                    <MainLayout>
-                        <Profile />
-                    </MainLayout>
+
+                    <ProtectedRoute>
+
+                        <MainLayout>
+
+                            <Profile />
+
+                        </MainLayout>
+
+                    </ProtectedRoute>
+
                 }
+
             />
 
+
+
             <Route
+
                 path="/restaurants"
+
                 element={
-                    <MainLayout>
-                        <Restaurants />
-                    </MainLayout>
+
+                    <ProtectedRoute>
+
+                        <MainLayout>
+
+                            <Restaurants />
+
+                        </MainLayout>
+
+                    </ProtectedRoute>
+
                 }
+
             />
 
+
+
             <Route
+
                 path="/restaurants/:id/menu"
+
                 element={
-                    <MainLayout>
-                        <Menu />
-                    </MainLayout>
+
+                    <ProtectedRoute>
+
+                        <MainLayout>
+
+                            <Menu />
+
+                        </MainLayout>
+
+                    </ProtectedRoute>
+
                 }
+
             />
 
+
+
             <Route
+
                 path="/my-meals"
+
                 element={
-                    <MainLayout>
-                        <MyMeals />
-                    </MainLayout>
+
+                    <ProtectedRoute>
+
+                        <MainLayout>
+
+                            <MyMeals />
+
+                        </MainLayout>
+
+                    </ProtectedRoute>
+
                 }
+
             />
 
         </Routes>

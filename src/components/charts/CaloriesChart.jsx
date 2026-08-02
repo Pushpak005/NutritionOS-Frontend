@@ -1,93 +1,100 @@
+import { useEffect, useState } from "react";
+
 import {
-
+    ResponsiveContainer,
     LineChart,
-
     Line,
-
     XAxis,
-
     YAxis,
-
     Tooltip,
-
-    ResponsiveContainer
-
+    CartesianGrid
 } from "recharts";
 
-const data=[
+import { getWeeklyAnalytics } from "../../services/analyticsService";
 
-{day:"Mon",calories:1800},
+export default function CaloriesChart() {
 
-{day:"Tue",calories:2100},
+    const [data, setData] = useState([]);
 
-{day:"Wed",calories:1900},
+    useEffect(() => {
 
-{day:"Thu",calories:2200},
+        async function loadChart() {
 
-{day:"Fri",calories:1700},
+            try {
 
-{day:"Sat",calories:2000},
+                const result = await getWeeklyAnalytics();
 
-{day:"Sun",calories:1850}
+                setData(result);
 
-];
+            }
 
-export default function CaloriesChart(){
+            catch (err) {
 
-return(
+                console.error(err);
 
-<div
+            }
 
-style={{
+        }
 
-marginTop:"30px",
+        loadChart();
 
-background:"#1d1d1d",
+    }, []);
 
-padding:"20px",
+    return (
 
-borderRadius:"15px"
+        <div
+            style={{
+                background:"#1d1d1d",
+                padding:"25px",
+                marginTop:"30px",
+                borderRadius:"15px"
+            }}
+        >
 
-}}
+            <h2
+                style={{
+                    color:"white",
+                    marginBottom:"20px"
+                }}
+            >
+                📈 Weekly Calories
+            </h2>
 
->
+            <ResponsiveContainer
+                width="100%"
+                height={300}
+            >
 
-<h2>
+                <LineChart
+                    data={data}
+                >
 
-📈 Weekly Calories
+                    <CartesianGrid strokeDasharray="3 3"/>
 
-</h2>
+                    <XAxis dataKey="day"/>
 
-<ResponsiveContainer
+                    <YAxis/>
 
-width="100%"
+                    <Tooltip/>
 
-height={300}
+                    <Line
 
->
+                        type="monotone"
 
-<LineChart data={data}>
+                        dataKey="calories"
 
-<XAxis dataKey="day"/>
+                        stroke="#7c3aed"
 
-<YAxis/>
+                        strokeWidth={3}
 
-<Tooltip/>
+                    />
 
-<Line
+                </LineChart>
 
-type="monotone"
+            </ResponsiveContainer>
 
-dataKey="calories"
+        </div>
 
-/>
-
-</LineChart>
-
-</ResponsiveContainer>
-
-</div>
-
-);
+    );
 
 }

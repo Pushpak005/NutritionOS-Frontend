@@ -1,17 +1,59 @@
 :root{
 
+/* Backgrounds */
+
 --bg:#09090B;
+
+--surface:#111111;
 
 --card:#18181B;
 
---purple:#8B5CF6;
+--card-hover:#232326;
 
---purple-hover:#7C3AED;
+/* Brand */
 
---border:#2D2D35;
+--primary:#8B5CF6;
+
+--primary-hover:#7C3AED;
+
+--secondary:#A855F7;
+
+/* Status */
+
+--success:#22C55E;
+
+--warning:#F59E0B;
+
+--danger:#EF4444;
+
+--info:#3B82F6;
+
+/* Text */
 
 --text:#FAFAFA;
 
 --text2:#A1A1AA;
+
+--text3:#71717A;
+
+/* Borders */
+
+--border:#2D2D35;
+
+/* Radius */
+
+--radius:20px;
+
+/* Shadows */
+
+--shadow:
+0 8px 30px rgba(0,0,0,.35);
+
+--shadow-hover:
+0 12px 35px rgba(139,92,246,.20);
+
+/* Animation */
+
+--transition:.30s ease;
 
 }

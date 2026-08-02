@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { getRecommendations } from "../../services/aiService";
+import { getAICoach } from "../../services/aiCoachService";
+import { showInfo } from "../common/AppToast";
 
 export default function AICoachCard() {
 
-    const [data, setData] = useState(null);
+    const [message, setMessage] = useState("Loading AI Coach...");
 
     useEffect(() => {
 
@@ -11,15 +12,34 @@ export default function AICoachCard() {
 
             try {
 
-                const response = await getRecommendations();
+                const data = await getAICoach();
 
-                setData(response);
+                if (data.ai_message) {
+
+                    setMessage(data.ai_message);
+                    showInfo("AI Coach Updated");
+
+                }
+
+                else if (data.message) {
+
+                    setMessage(data.message);
+
+                }
+
+                else {
+
+                    setMessage("No AI recommendation available.");
+
+                }
 
             }
 
             catch (err) {
 
                 console.error(err);
+
+                setMessage("Unable to load AI Coach.");
 
             }
 
@@ -29,90 +49,30 @@ export default function AICoachCard() {
 
     }, []);
 
-    if (!data)
-
-        return <p>Loading AI Coach...</p>;
-
     return (
 
         <div
             style={{
-                background: "#1f1f1f",
+                background: "#1d1d1d",
+                borderRadius: "20px",
                 padding: "25px",
-                borderRadius: "15px",
-                marginTop: "30px",
-                border: "1px solid #333"
+                color: "white",
+                boxShadow: "0 0 15px rgba(0,0,0,0.3)"
             }}
         >
 
-            <h2>
+            <h2>🤖 AI Coach</h2>
 
-                🤖 NutritionOS AI Coach
+            <hr style={{ borderColor: "#333" }} />
 
-            </h2>
-
-            <br />
-
-            <h3>
-
-                Remaining Protein :
-
-                {" "}
-
-                {Math.round(data.remaining_protein)} g
-
-            </h3>
-
-            <br />
-
-            {
-
-                data.recommendations.map((meal) => (
-
-                    <div
-                        key={meal.id}
-                        style={{
-                            marginBottom: "20px"
-                        }}
-                    >
-
-                        <h3>
-
-                            {meal.dish_name}
-
-                        </h3>
-
-                        <p>
-
-                            Protein :
-
-                            {" "}
-
-                            {meal.protein} g
-
-                        </p>
-
-                        <p>
-
-                            Calories :
-
-                            {" "}
-
-                            {meal.calories}
-
-                        </p>
-
-                        <p>
-
-                            ₹ {meal.price}
-
-                        </p>
-
-                    </div>
-
-                ))
-
-            }
+            <p
+                style={{
+                    lineHeight: "1.8",
+                    whiteSpace: "pre-line"
+                }}
+            >
+                {message}
+            </p>
 
         </div>
 
