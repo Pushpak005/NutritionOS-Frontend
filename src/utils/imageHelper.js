@@ -1,8 +1,18 @@
 export function getDishImage(imageKey) {
-
     if (!imageKey) {
         return "";
     }
 
-    return `${import.meta.env.VITE_SUPABASE_STORAGE}/${imageKey}.png?v=2`;
+    const storageBase =
+        import.meta.env.VITE_SUPABASE_STORAGE;
+
+    if (!storageBase) {
+        console.error(
+            "VITE_SUPABASE_STORAGE is not configured."
+        );
+
+        return "";
+    }
+
+    return `${storageBase.replace(/\/$/, "")}/${imageKey}.png`;
 }

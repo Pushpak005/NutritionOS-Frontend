@@ -2,849 +2,633 @@ import { useNavigate } from "react-router-dom";
 import { logMeal } from "../../services/mealService";
 import { getDishImage } from "../../utils/imageHelper";
 
+function getDisplayDishName(name) {
+    if (!name) return "Recommended Meal";
+
+    return String(name)
+        .replace(/\s+\d{1,4}$/, "")
+        .trim();
+}
+
 export default function TodayAIPickCard({
     meal,
     onMealLogged,
     nutritionComplete = false
 }) {
-
     const navigate = useNavigate();
 
-    // ==========================================
-    // Nutrition Complete State
-    // ==========================================
-
     if (!meal && nutritionComplete) {
-
         return (
-
             <div
                 style={{
                     background:
-                        "linear-gradient(135deg,#312E81,#4338CA)",
-
-                    borderRadius: "24px",
-
-                    padding: "32px",
-
+                        "linear-gradient(135deg,#211A4A 0%,#312E81 55%,#4C1D95 100%)",
+                    borderRadius: "28px",
+                    padding: "36px",
                     marginBottom: "32px",
-
                     color: "white",
-
                     textAlign: "center",
-
-                    boxShadow:
-                        "0 20px 45px rgba(0,0,0,.28)",
-
-                    border:
-                        "1px solid rgba(255,255,255,.08)"
+                    boxShadow: "0 24px 60px rgba(0,0,0,.30)",
+                    border: "1px solid rgba(139,92,246,.35)"
                 }}
             >
-
                 <div
                     style={{
-                        fontSize: "42px",
-
+                        fontSize: "46px",
                         marginBottom: "12px"
                     }}
                 >
                     🎯
                 </div>
 
-
                 <h2
                     style={{
                         margin: 0,
-
                         fontSize: "28px",
-
                         fontWeight: "800"
                     }}
                 >
                     Today's Nutrition Target is Complete
                 </h2>
 
-
                 <p
                     style={{
-                        marginTop: "12px",
-
-                        color: "#D1D5DB",
-
+                        margin: "12px auto 0",
+                        color: "#C7D2FE",
                         fontSize: "16px",
-
                         lineHeight: "1.6",
-
-                        maxWidth: "700px",
-
-                        marginLeft: "auto",
-
-                        marginRight: "auto"
+                        maxWidth: "700px"
                     }}
                 >
-                    You've essentially met your calorie
-                    and protein targets for today.
-                    No additional full meal is needed
+                    You've essentially met your calorie and protein
+                    targets for today. No additional full meal is needed
                     right now.
                 </p>
-
             </div>
-
         );
-
     }
-
-
-    // ==========================================
-    // No Meal / No Recommendation
-    // ==========================================
 
     if (!meal) {
-
         return null;
-
     }
 
-
-    const mealId =
-        meal.id ||
-        meal.dish_id;
-
+    const mealId = meal.id || meal.dish_id;
 
     const restaurant =
         meal.restaurant_name ||
         meal.restaurant ||
         "Restaurant";
 
-
     const match =
         meal.match_percentage ??
         meal.score ??
         0;
 
-
-    // ==========================================
-    // Log Meal
-    // ==========================================
+    const dishName = getDisplayDishName(meal.dish_name);
 
     async function handleLogMeal() {
-
         if (!mealId) {
-
-            alert(
-                "Meal ID not found."
-            );
-
+            alert("Meal ID not found.");
             return;
-
         }
 
-
         try {
-
             await logMeal(
                 mealId,
                 meal.meal_type || "Lunch",
                 1
             );
 
-
-            alert(
-                "✅ Meal Logged"
-            );
-
-
-            // ==================================
-            // Refresh Dashboard Data
-            // ==================================
+            alert("✅ Meal Logged");
 
             if (onMealLogged) {
-
                 await onMealLogged();
-
             }
-
-        }
-
-        catch (err) {
-
+        } catch (err) {
             console.error(
                 "Meal logging error:",
                 err
             );
 
-            alert(
-                "Unable to log meal."
-            );
-
+            alert("Unable to log meal.");
         }
-
     }
 
+    const metrics = [
+        {
+            icon: "🔥",
+            value: `${meal.calories ?? 0}`,
+            label: "KCAL",
+            accent: "#FF9F1C"
+        },
+        {
+            icon: "💪",
+            value: `${meal.protein ?? 0}g`,
+            label: "PROTEIN",
+            accent: "#60A5FA"
+        },
+        {
+            icon: "₹",
+            value: `₹${meal.price ?? "--"}`,
+            label: "PRICE",
+            accent: "#FACC15",
+            important: true
+        },
+        {
+            icon: "★",
+            value: meal.rating ?? "--",
+            label: "RATING",
+            accent: "#FACC15"
+        }
+    ];
 
     return (
-
         <div
             style={{
+                position: "relative",
                 background:
-                    "linear-gradient(135deg,#312E81,#4338CA)",
-
-                borderRadius: "24px",
-
-                padding: "28px",
-
+                    "linear-gradient(145deg,#17142D 0%,#1E1B4B 45%,#111827 100%)",
+                borderRadius: "28px",
+                padding: "20px",
                 marginBottom: "32px",
-
                 color: "white",
-
                 boxShadow:
-                    "0 20px 45px rgba(0,0,0,.28)",
-
+                    "0 24px 60px rgba(0,0,0,.34)",
                 border:
-                    "1px solid rgba(255,255,255,.08)",
-
+                    "1px solid rgba(139,92,246,.28)",
                 width: "100%",
-
-                maxWidth: "100%",
-
                 boxSizing: "border-box",
-
                 overflow: "hidden"
             }}
         >
-
-            {/* =====================================
-                    HEADER
-            ===================================== */}
+            <div
+                style={{
+                    position: "absolute",
+                    width: "240px",
+                    height: "240px",
+                    borderRadius: "50%",
+                    background:
+                        "rgba(124,58,237,.14)",
+                    filter: "blur(50px)",
+                    top: "-120px",
+                    right: "-70px",
+                    pointerEvents: "none"
+                }}
+            />
 
             <div
                 className="today-pick-header"
                 style={{
+                    position: "relative",
                     display: "flex",
-
-                    justifyContent:
-                        "space-between",
-
-                    alignItems:
-                        "center",
-
+                    justifyContent: "space-between",
+                    alignItems: "center",
                     gap: "16px",
-
-                    marginBottom: "28px"
+                    padding: "6px 4px 18px"
                 }}
             >
-
-                <div
-                    style={{
-                        minWidth: 0
-                    }}
-                >
+                <div>
+                    <div
+                        style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "7px",
+                            background:
+                                "rgba(255,255,255,.08)",
+                            border:
+                                "1px solid rgba(255,255,255,.10)",
+                            padding: "7px 12px",
+                            borderRadius: "999px",
+                            fontSize: "12px",
+                            fontWeight: "800",
+                            letterSpacing: ".4px"
+                        }}
+                    >
+                        ✨ AI PICK
+                    </div>
 
                     <div
                         style={{
-                            fontSize: "14px",
-
-                            opacity: .75,
-
-                            marginBottom: "6px"
+                            marginTop: "10px",
+                            color: "#A5B4FC",
+                            fontSize: "13px",
+                            fontWeight: "700"
                         }}
                     >
-                        🤖 AI Recommendation
+                        Personalized for your nutrition profile
                     </div>
-
-
-                    <h2
-                        className="today-pick-title"
-                        style={{
-                            margin: 0,
-
-                            fontSize: "32px",
-
-                            fontWeight: "800"
-                        }}
-                    >
-                        Today's Best Pick
-                    </h2>
-
                 </div>
-
 
                 <div
-                    className="today-pick-match"
                     style={{
                         background:
-                            "rgba(34,197,94,.18)",
-
-                        color: "#4ADE80",
-
+                            "linear-gradient(135deg,#064E3B,#166534)",
+                        color: "#86EFAC",
                         border:
-                            "1px solid rgba(74,222,128,.35)",
-
-                        padding: "10px 18px",
-
+                            "1px solid rgba(134,239,172,.30)",
+                        padding: "10px 15px",
                         borderRadius: "999px",
-
-                        fontWeight: "700",
-
-                        fontSize: "18px",
-
+                        fontWeight: "800",
+                        fontSize: "15px",
                         whiteSpace: "nowrap",
-
-                        flexShrink: 0
+                        boxShadow:
+                            "0 8px 20px rgba(34,197,94,.12)"
                     }}
                 >
-                    🎯 {match}% Match
+                    🎯 {match}% match
                 </div>
-
             </div>
-
-
-            {/* =====================================
-                    IMAGE + DETAILS
-            ===================================== */}
 
             <div
                 className="today-pick-main"
                 style={{
+                    position: "relative",
                     display: "grid",
-
                     gridTemplateColumns:
-                        "320px minmax(0,1fr)",
-
-                    gap: "28px",
-
-                    alignItems: "center",
-
-                    marginBottom: "30px"
+                        "minmax(280px,42%) minmax(0,1fr)",
+                    gap: "24px",
+                    alignItems: "stretch"
                 }}
             >
-
-                <img
-                    src={getDishImage(
-                        meal.image_key
-                    )}
-
-                    alt={meal.dish_name}
-
+                <div
                     style={{
-                        width: "100%",
-
-                        height: "240px",
-
-                        objectFit: "cover",
-
+                        position: "relative",
+                        minWidth: 0,
+                        minHeight: "290px",
                         borderRadius: "22px",
-
+                        overflow: "hidden",
+                        background: "#111827",
                         boxShadow:
-                            "0 10px 24px rgba(0,0,0,.25)",
-
-                        display: "block"
+                            "0 16px 35px rgba(0,0,0,.30)"
                     }}
-                />
+                >
+                    <img
+                        src={getDishImage(meal.image_key)}
+                        alt={dishName}
+                        onError={(e) => {
+                            e.target.src =
+                                "https://placehold.co/800x600?text=NutritionOS";
+                        }}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            minHeight: "290px",
+                            objectFit: "cover",
+                            display: "block"
+                        }}
+                    />
 
+                    <div
+                        style={{
+                            position: "absolute",
+                            inset: 0,
+                            background:
+                                "linear-gradient(to top,rgba(0,0,0,.72),rgba(0,0,0,0) 55%)"
+                        }}
+                    />
+
+                    <div
+                        style={{
+                            position: "absolute",
+                            left: "18px",
+                            bottom: "16px",
+                            right: "18px"
+                        }}
+                    >
+                        <div
+                            style={{
+                                color: "#CBD5E1",
+                                fontSize: "13px",
+                                fontWeight: "700",
+                                marginBottom: "5px"
+                            }}
+                        >
+                            {meal.meal_type || "Meal"}
+                        </div>
+
+                        <div
+                            style={{
+                                fontSize: "25px",
+                                lineHeight: "1.15",
+                                fontWeight: "900",
+                                textShadow:
+                                    "0 3px 15px rgba(0,0,0,.6)"
+                            }}
+                        >
+                            {dishName}
+                        </div>
+                    </div>
+                </div>
 
                 <div
                     style={{
-                        minWidth: 0
+                        minWidth: 0,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center"
                     }}
                 >
+                    <div
+                        style={{
+                            color: "#94A3B8",
+                            fontSize: "13px",
+                            fontWeight: "700",
+                            textTransform: "uppercase",
+                            letterSpacing: "1px"
+                        }}
+                    >
+                        Recommended dish
+                    </div>
 
                     <h1
                         className="today-pick-dish-name"
                         style={{
-                            margin: 0,
-
-                            fontSize: "38px",
-
-                            fontWeight: "800",
-
+                            margin: "7px 0 0",
+                            fontSize: "34px",
+                            lineHeight: "1.08",
+                            fontWeight: "900",
+                            letterSpacing: "-.7px",
                             overflowWrap: "anywhere"
                         }}
                     >
-                        {meal.dish_name}
+                        {dishName}
                     </h1>
 
-
-                    <p
+                    <div
                         style={{
                             marginTop: "10px",
-
-                            color: "#D1D5DB",
-
-                            fontSize: "18px",
-
-                            overflowWrap: "anywhere"
+                            color: "#CBD5E1",
+                            fontSize: "16px",
+                            fontWeight: "600"
                         }}
                     >
                         📍 {restaurant}
-                    </p>
-
+                    </div>
 
                     <div
                         style={{
                             display: "flex",
-
-                            gap: "10px",
-
-                            marginTop: "18px",
-
+                            gap: "9px",
+                            marginTop: "17px",
                             flexWrap: "wrap"
                         }}
                     >
+                        <span
+                            style={{
+                                background:
+                                    "rgba(34,197,94,.14)",
+                                color: "#86EFAC",
+                                border:
+                                    "1px solid rgba(34,197,94,.25)",
+                                padding: "7px 11px",
+                                borderRadius: "999px",
+                                fontWeight: "800",
+                                fontSize: "12px"
+                            }}
+                        >
+                            ⭐ Healthy {meal.healthy_score ?? "--"}
+                        </span>
 
                         <span
                             style={{
-                                background: "#22C55E",
-
-                                padding: "8px 14px",
-
+                                background:
+                                    meal.is_veg
+                                        ? "rgba(34,197,94,.12)"
+                                        : "rgba(239,68,68,.12)",
+                                color:
+                                    meal.is_veg
+                                        ? "#86EFAC"
+                                        : "#FCA5A5",
+                                border:
+                                    meal.is_veg
+                                        ? "1px solid rgba(34,197,94,.24)"
+                                        : "1px solid rgba(239,68,68,.24)",
+                                padding: "7px 11px",
                                 borderRadius: "999px",
-
-                                fontWeight: "700"
+                                fontWeight: "800",
+                                fontSize: "12px"
                             }}
                         >
-                            ⭐ Healthy Score{" "}
-                            {meal.healthy_score}
+                            {meal.is_veg
+                                ? "🥗 Veg"
+                                : "🍗 Non Veg"}
                         </span>
-
-
-                        {meal.is_veg ? (
-
-                            <span
-                                style={{
-                                    background: "#15803D",
-
-                                    padding: "8px 14px",
-
-                                    borderRadius: "999px"
-                                }}
-                            >
-                                🥗 Veg
-                            </span>
-
-                        ) : (
-
-                            <span
-                                style={{
-                                    background: "#B91C1C",
-
-                                    padding: "8px 14px",
-
-                                    borderRadius: "999px"
-                                }}
-                            >
-                                🍗 Non Veg
-                            </span>
-
-                        )}
-
                     </div>
-
-                </div>
-
-            </div>
-
-
-            {/* =====================================
-                    METRICS
-            ===================================== */}
-
-            <div
-                className="today-pick-metrics"
-                style={{
-                    display: "grid",
-
-                    gridTemplateColumns:
-                        "repeat(4,minmax(0,1fr))",
-
-                    gap: "16px",
-
-                    marginBottom: "28px"
-                }}
-            >
-
-                {[
-                    {
-                        icon: "🔥",
-
-                        title: "Calories",
-
-                        value:
-                            `${meal.calories} kcal`
-                    },
-
-                    {
-                        icon: "💪",
-
-                        title: "Protein",
-
-                        value:
-                            `${meal.protein} g`
-                    },
-
-                    {
-                        icon: "💰",
-
-                        title: "Price",
-
-                        value:
-                            `₹${meal.price}`
-                    },
-
-                    {
-                        icon: "⭐",
-
-                        title: "Rating",
-
-                        value:
-                            meal.rating
-                    }
-
-                ].map((item) => (
 
                     <div
-                        key={item.title}
+                        className="today-pick-metrics"
                         style={{
-                            background:
-                                "rgba(255,255,255,.08)",
-
-                            border:
-                                "1px solid rgba(255,255,255,.08)",
-
-                            borderRadius: "18px",
-
-                            padding: "18px",
-
-                            textAlign: "center",
-
-                            minWidth: 0,
-
-                            boxSizing: "border-box"
+                            display: "grid",
+                            gridTemplateColumns:
+                                "repeat(4,minmax(0,1fr))",
+                            gap: "10px",
+                            marginTop: "20px"
                         }}
                     >
+                        {metrics.map((item) => (
+                            <div
+                                key={item.label}
+                                style={{
+                                    background:
+                                        "rgba(255,255,255,.055)",
+                                    border:
+                                        item.important
+                                            ? "1px solid rgba(250,204,21,.24)"
+                                            : "1px solid rgba(255,255,255,.08)",
+                                    borderRadius: "15px",
+                                    padding: "13px 8px",
+                                    textAlign: "center",
+                                    minWidth: 0,
+                                    boxSizing: "border-box"
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        fontSize: "18px",
+                                        color: item.accent
+                                    }}
+                                >
+                                    {item.icon}
+                                </div>
 
-                        <div
-                            style={{
-                                fontSize: "24px",
+                                <div
+                                    style={{
+                                        marginTop: "5px",
+                                        fontSize:
+                                            item.important
+                                                ? "23px"
+                                                : "18px",
+                                        lineHeight: "1.1",
+                                        fontWeight:
+                                            item.important
+                                                ? "900"
+                                                : "800",
+                                        color:
+                                            item.accent,
+                                        overflowWrap:
+                                            "anywhere"
+                                    }}
+                                >
+                                    {item.value}
+                                </div>
 
-                                marginBottom: "10px"
-                            }}
-                        >
-                            {item.icon}
-                        </div>
-
-
-                        <div
-                            className=
-                                "today-pick-metric-value"
-
-                            style={{
-                                fontSize: "24px",
-
-                                fontWeight: "700",
-
-                                overflowWrap: "anywhere"
-                            }}
-                        >
-                            {item.value}
-                        </div>
-
-
-                        <div
-                            style={{
-                                marginTop: "6px",
-
-                                color: "#CBD5E1",
-
-                                fontSize: "14px"
-                            }}
-                        >
-                            {item.title}
-                        </div>
-
+                                <div
+                                    style={{
+                                        marginTop: "5px",
+                                        color: "#94A3B8",
+                                        fontSize: "10px",
+                                        fontWeight: "800",
+                                        letterSpacing: ".7px"
+                                    }}
+                                >
+                                    {item.label}
+                                </div>
+                            </div>
+                        ))}
                     </div>
-
-                ))}
-
+                </div>
             </div>
-
-
-            {/* =====================================
-                    AI INSIGHT
-            ===================================== */}
 
             <div
                 style={{
+                    marginTop: "22px",
                     background:
-                        "rgba(255,255,255,.08)",
-
+                        "rgba(99,102,241,.10)",
                     border:
-                        "1px solid rgba(255,255,255,.10)",
-
+                        "1px solid rgba(129,140,248,.18)",
                     borderRadius: "18px",
-
-                    padding: "22px",
-
-                    marginBottom: "28px",
-
-                    boxSizing: "border-box",
-
-                    width: "100%"
+                    padding: "18px 20px"
                 }}
             >
-
-                <h3
+                <div
                     style={{
-                        marginTop: 0,
-
-                        marginBottom: "16px"
+                        color: "#C4B5FD",
+                        fontSize: "13px",
+                        fontWeight: "800",
+                        marginBottom: "10px"
                     }}
                 >
-                    🧠 Why AI Recommended This?
-                </h3>
+                    🧠 WHY AI RECOMMENDED THIS
+                </div>
 
-
-                <ul
+                <div
                     style={{
-                        margin: 0,
-
-                        paddingLeft: "22px",
-
-                        lineHeight: "2"
+                        color: "#E2E8F0",
+                        fontSize: "14px",
+                        lineHeight: "1.7",
+                        display: "grid",
+                        gridTemplateColumns:
+                            "repeat(2,minmax(0,1fr))",
+                        gap: "6px 24px"
                     }}
                 >
-
-                    <li>
-                        {match}% match with your
-                        nutrition profile
-                    </li>
-
-                    <li>
-                        Optimized for{" "}
+                    <div>• {match}% match with your nutrition profile</div>
+                    <div>
+                        • Optimized for{" "}
                         <strong>
-                            {meal.meal_type}
+                            {meal.meal_type || "your meal"}
                         </strong>
-                    </li>
-
-                    <li>
-                        High protein for your goal
-                    </li>
-
-                    <li>
-                        Fits within your daily budget
-                    </li>
-
-                    <li>
-                        Highly rated restaurant
-                    </li>
-
-                </ul>
-
+                    </div>
+                    <div>• High protein for your goal</div>
+                    <div>• Fits within your daily budget</div>
+                </div>
             </div>
-
-
-            {/* =====================================
-                    BUTTONS
-            ===================================== */}
 
             <div
                 className="today-pick-buttons"
                 style={{
                     display: "flex",
-
-                    gap: "16px"
+                    gap: "12px",
+                    marginTop: "18px"
                 }}
             >
-
                 <button
                     onClick={handleLogMeal}
                     style={{
                         flex: 1,
-
-                        padding: "16px",
-
-                        background: "white",
-
-                        color: "#4338CA",
-
+                        padding: "15px",
+                        background:
+                            "linear-gradient(135deg,#22C55E,#16A34A)",
+                        color: "white",
                         border: "none",
-
-                        borderRadius: "16px",
-
-                        fontWeight: "700",
-
+                        borderRadius: "14px",
+                        fontWeight: "900",
                         cursor: "pointer",
-
-                        fontSize: "16px"
+                        fontSize: "15px",
+                        boxShadow:
+                            "0 10px 24px rgba(34,197,94,.18)"
                     }}
                 >
                     🍽 Log Meal
                 </button>
 
-
                 <button
                     onClick={() =>
-                        navigate(
-                            `/dish/${mealId}`
-                        )
+                        navigate(`/dish/${mealId}`)
                     }
-
                     style={{
                         flex: 1,
-
-                        padding: "16px",
-
-                        background: "transparent",
-
+                        padding: "15px",
+                        background:
+                            "rgba(255,255,255,.06)",
                         color: "white",
-
                         border:
-                            "1px solid rgba(255,255,255,.35)",
-
-                        borderRadius: "16px",
-
-                        fontWeight: "700",
-
+                            "1px solid rgba(255,255,255,.15)",
+                        borderRadius: "14px",
+                        fontWeight: "800",
                         cursor: "pointer",
-
-                        fontSize: "16px"
+                        fontSize: "15px"
                     }}
                 >
-                    🔍 View Details
+                    View Details →
                 </button>
-
             </div>
-
-
-            {/* =====================================
-                    MOBILE RESPONSIVE CSS
-            ===================================== */}
 
             <style>
                 {`
-
-                    @media (max-width: 767px) {
-
-                        .today-pick-header {
-
-                            flex-direction:
-                                column !important;
-
-                            align-items:
-                                flex-start !important;
-
-                        }
-
-                        .today-pick-title {
-
-                            font-size:
-                                26px !important;
-
-                            line-height:
-                                1.2 !important;
-
-                        }
-
-                        .today-pick-match {
-
-                            font-size:
-                                15px !important;
-
-                            padding:
-                                8px 14px !important;
-
-                        }
-
+                    @media (max-width: 900px) {
                         .today-pick-main {
+                            grid-template-columns: 1fr !important;
+                        }
 
-                            grid-template-columns:
-                                1fr !important;
-
-                            gap:
-                                18px !important;
-
+                        .today-pick-main > div:first-child {
+                            min-height: 260px !important;
                         }
 
                         .today-pick-main img {
+                            min-height: 260px !important;
+                        }
+                    }
 
-                            width:
-                                100% !important;
+                    @media (max-width: 767px) {
+                        .today-pick-header {
+                            flex-direction: column !important;
+                            align-items: flex-start !important;
+                        }
 
-                            height:
-                                210px !important;
-
+                        .today-pick-main {
+                            grid-template-columns: 1fr !important;
                         }
 
                         .today-pick-dish-name {
-
-                            font-size:
-                                28px !important;
-
-                            line-height:
-                                1.2 !important;
-
+                            font-size: 28px !important;
                         }
 
                         .today-pick-metrics {
-
                             grid-template-columns:
-                                repeat(
-                                    2,
-                                    minmax(0,1fr)
-                                ) !important;
-
-                            gap:
-                                10px !important;
-
-                        }
-
-                        .today-pick-metrics > div {
-
-                            padding:
-                                14px 8px !important;
-
-                        }
-
-                        .today-pick-metric-value {
-
-                            font-size:
-                                19px !important;
-
+                                repeat(2,minmax(0,1fr)) !important;
                         }
 
                         .today-pick-buttons {
-
-                            flex-direction:
-                                column !important;
-
+                            flex-direction: column !important;
                         }
 
                         .today-pick-buttons button {
-
-                            width:
-                                100% !important;
-
+                            width: 100% !important;
                         }
-
                     }
-
-
-                    @media (max-width: 380px) {
-
-                        .today-pick-metrics {
-
-                            grid-template-columns:
-                                1fr !important;
-
-                        }
-
-                    }
-
                 `}
             </style>
-
         </div>
-
     );
-
 }
