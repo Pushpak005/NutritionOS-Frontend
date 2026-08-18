@@ -12,6 +12,11 @@ import MyMeals from "./pages/MyMeals/MyMeals";
 
 import MainLayout from "./components/layout/MainLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import DishDetails from "./pages/Dish/DishDetails";
+
+
+
+
 
 function App() {
 
@@ -26,7 +31,10 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             <Route path="/register" element={<Onboarding />} />
+            
+            <Route path="/dish/:dishId" element={<DishDetails />}
 
+/>
 
 
             {/* ---------- Protected Routes ---------- */}

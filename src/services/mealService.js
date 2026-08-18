@@ -1,6 +1,10 @@
 import api from "./api";
 
-export async function logMeal(menuItemId, mealType = "Lunch", quantity = 1) {
+export async function logMeal(
+    menuItemId,
+    mealType = "Lunch",
+    quantity = 1
+) {
 
     const response = await api.post(
         "/meals/log",

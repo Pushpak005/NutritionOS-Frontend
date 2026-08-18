@@ -1,6 +1,8 @@
 import { useState } from "react";
+
 import StepCard from "../../components/onboarding/StepCard";
 import NextButton from "../../components/onboarding/NextButton";
+import Input from "../../components/ui/Input";
 
 export default function Step1Account({
     data,
@@ -9,6 +11,7 @@ export default function Step1Account({
 }) {
 
     const [errors, setErrors] = useState({});
+    const [showPassword, setShowPassword] = useState(false);
 
     function validate() {
 
@@ -23,12 +26,11 @@ export default function Step1Account({
         if (!data.email?.trim())
             newErrors.email = "Email is required";
 
-        if (!/\S+@\S+\.\S+/.test(data.email))
+        if (data.email && !/\S+@\S+\.\S+/.test(data.email))
             newErrors.email = "Invalid email";
 
         if (!data.password || data.password.length < 8)
-            newErrors.password =
-                "Minimum 8 characters";
+            newErrors.password = "Minimum 8 characters";
 
         setErrors(newErrors);
 
@@ -49,15 +51,22 @@ export default function Step1Account({
     return (
 
         <StepCard
+
             title="Create your account"
-            subtitle="Let's build your NutritionOS profile."
+
+            subtitle="Let's build your personal AI Nutrition Operating System."
+
         >
 
-            <input
+            <Input
+
+                icon="👤"
 
                 placeholder="First Name"
 
                 value={data.firstName || ""}
+
+                error={errors.firstName}
 
                 onChange={(e) =>
                     updateData("firstName", e.target.value)
@@ -65,13 +74,15 @@ export default function Step1Account({
 
             />
 
-            <span>{errors.firstName}</span>
+            <Input
 
-            <input
+                icon="👤"
 
                 placeholder="Last Name"
 
                 value={data.lastName || ""}
+
+                error={errors.lastName}
 
                 onChange={(e) =>
                     updateData("lastName", e.target.value)
@@ -79,13 +90,17 @@ export default function Step1Account({
 
             />
 
-            <span>{errors.lastName}</span>
+            <Input
 
-            <input
+                icon="📧"
 
-                placeholder="Email"
+                type="email"
+
+                placeholder="Email Address"
 
                 value={data.email || ""}
+
+                error={errors.email}
 
                 onChange={(e) =>
                     updateData("email", e.target.value)
@@ -93,27 +108,74 @@ export default function Step1Account({
 
             />
 
-            <span>{errors.email}</span>
+            <div
+                style={{
+                    position: "relative"
+                }}
+            >
 
-            <input
+                <Input
 
-                type="password"
+                    icon="🔒"
 
-                placeholder="Password"
+                    type={
+                        showPassword
+                            ? "text"
+                            : "password"
+                    }
 
-                value={data.password || ""}
+                    placeholder="Password"
 
-                onChange={(e) =>
-                    updateData("password", e.target.value)
-                }
+                    value={data.password || ""}
 
-            />
+                    error={errors.password}
 
-            <span>{errors.password}</span>
+                    onChange={(e) =>
+                        updateData("password", e.target.value)
+                    }
+
+                    style={{
+                        paddingRight: "55px"
+                    }}
+
+                />
+
+                <span
+
+                    onClick={() =>
+                        setShowPassword(!showPassword)
+                    }
+
+                    style={{
+
+                        position: "absolute",
+
+                        right: "18px",
+
+                        top: "18px",
+
+                        cursor: "pointer",
+
+                        color: "#94a3b8",
+
+                        fontSize: "18px"
+
+                    }}
+
+                >
+
+                    {showPassword ? "🙈" : "👁"}
+
+                </span>
+
+            </div>
 
             <NextButton
+
                 onClick={continueStep}
+
                 text="Continue"
+
             />
 
         </StepCard>

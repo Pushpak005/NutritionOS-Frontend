@@ -1,125 +1,289 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { login } from "../../services/authService";
+
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
+
 import "../../styles/login.css";
 
 export default function Login() {
-  const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
-    setError("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-    if (!email || !password) {
-      setError("Please enter email and password.");
-      return;
+    async function handleLogin() {
+
+        setError("");
+
+        if (!email || !password) {
+
+            setError("Please enter email and password.");
+
+            return;
+
+        }
+
+        try {
+
+            setLoading(true);
+
+            const response = await login(
+
+                email,
+
+                password
+
+            );
+
+            if (!response.access_token) {
+
+                setError("Login failed.");
+
+                return;
+
+            }
+
+            localStorage.setItem(
+
+                "access_token",
+
+                response.access_token
+
+            );
+
+            navigate("/dashboard");
+
+        }
+
+        catch (err) {
+
+            console.error(err);
+
+            setError(
+
+                err.response?.data?.detail ||
+
+                "Unable to login."
+
+            );
+
+        }
+
+        finally {
+
+            setLoading(false);
+
+        }
+
     }
 
-    try {
-      setLoading(true);
+    return (
 
-      const response = await login(email, password);
+        <div className="login-container">
 
-      console.log("========== LOGIN RESPONSE ==========");
-      console.log(response);
-      console.log("Access Token:", response.access_token);
-      console.log("===================================");
+            <div
 
-      if (!response.access_token) {
-        setError("Access token not found in response.");
-        return;
-      }
+                className="login-card"
 
-      localStorage.setItem("access_token", response.access_token);
+                style={{
 
-      console.log(
-        "Saved Token:",
-        localStorage.getItem("access_token")
-      );
+                    maxWidth: "480px",
 
-      navigate("/dashboard");
-    } catch (err) {
-      console.error("LOGIN ERROR:", err);
+                    borderRadius: "28px",
 
-      if (err.response) {
-        console.log("Status:", err.response.status);
-        console.log("Data:", err.response.data);
+                    padding: "45px",
 
-        setError(
-          err.response.data?.detail || "Login failed."
-        );
-      } else {
-        setError("Unable to connect to server.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+                    background: "rgba(25,25,35,.80)",
 
-  return (
-    <div className="login-container">
-      <div className="login-card">
+                    backdropFilter: "blur(18px)",
 
-        <div className="logo-section">
-          <h1>NutritionOS</h1>
-          <p>AI Powered Nutrition Operating System</p>
+                    border: "1px solid rgba(255,255,255,.08)"
+
+                }}
+
+            >
+
+                <div
+
+                    className="logo-section"
+
+                    style={{
+
+                        textAlign: "center",
+
+                        marginBottom: "35px"
+
+                    }}
+
+                >
+
+                    <h1
+                        style={{
+                            fontSize: "40px"
+                        }}
+                    >
+                        🥗 NutritionOS
+                    </h1>
+
+                    <p
+                        style={{
+                            color: "#94a3b8"
+                        }}
+                    >
+                        AI Powered Nutrition Operating System
+                    </p>
+
+                </div>
+
+                <Input
+
+                    label="Email"
+
+                    icon="📧"
+
+                    type="email"
+
+                    placeholder="Enter your email"
+
+                    value={email}
+
+                    onChange={(e)=>
+
+                        setEmail(
+
+                            e.target.value
+
+                        )
+
+                    }
+
+                />
+
+                <Input
+
+                    label="Password"
+
+                    icon="🔒"
+
+                    type="password"
+
+                    placeholder="Enter your password"
+
+                    value={password}
+
+                    onChange={(e)=>
+
+                        setPassword(
+
+                            e.target.value
+
+                        )
+
+                    }
+
+                />
+
+                {
+
+                    error && (
+
+                        <div
+
+                            style={{
+
+                                color: "#ef4444",
+
+                                textAlign: "center",
+
+                                marginBottom: "18px"
+
+                            }}
+
+                        >
+
+                            {error}
+
+                        </div>
+
+                    )
+
+                }
+
+                <Button
+
+                    onClick={handleLogin}
+
+                    disabled={loading}
+
+                >
+
+                    {
+
+                        loading
+
+                            ? "Signing In..."
+
+                            : "Sign In"
+
+                    }
+
+                </Button>
+
+                <p
+
+                    style={{
+
+                        color: "#94a3b8",
+
+                        textAlign: "center",
+
+                        marginTop: "30px"
+
+                    }}
+
+                >
+
+                    Don't have an account?
+
+                    <span
+
+                        onClick={()=>
+
+                            navigate("/register")
+
+                        }
+
+                        style={{
+
+                            color: "#8b5cf6",
+
+                            cursor: "pointer",
+
+                            marginLeft: "8px",
+
+                            fontWeight: "700"
+
+                        }}
+
+                    >
+
+                        Create Account
+
+                    </span>
+
+                </p>
+
+            </div>
+
         </div>
 
-        <div className="form-group">
-          <label>Email</label>
+    );
 
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Password</label>
-
-          <input
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-
-        {error && (
-          <p
-            style={{
-              color: "#ff6b6b",
-              marginBottom: "15px",
-              textAlign: "center",
-            }}
-          >
-            {error}
-          </p>
-        )}
-
-        <button
-          className="login-btn"
-          onClick={handleLogin}
-          disabled={loading}
-        >
-          {loading ? "Signing In..." : "Sign In"}
-        </button>
-
-        <p className="register-text">
-          Don't have an account?
-          <span onClick={() => navigate("/register")}>
-            Create Account
-          </span>
-        </p>
-
-      </div>
-    </div>
-  );
 }

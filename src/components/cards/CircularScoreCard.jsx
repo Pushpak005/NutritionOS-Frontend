@@ -7,27 +7,43 @@ import "react-circular-progressbar/dist/styles.css";
 
 export default function CircularScoreCard({
 
-    score
+    score = 0
 
 }) {
 
     let color = "#ef4444";
-
     let label = "Needs Improvement";
+    let emoji = "😕";
 
-    if (score >= 80) {
+    if (score >= 90) {
 
         color = "#22c55e";
-
         label = "Excellent";
+        emoji = "🏆";
+
+    }
+
+    else if (score >= 75) {
+
+        color = "#10b981";
+        label = "Very Good";
+        emoji = "💪";
 
     }
 
     else if (score >= 60) {
 
         color = "#f59e0b";
-
         label = "Good";
+        emoji = "👍";
+
+    }
+
+    else if (score >= 40) {
+
+        color = "#f97316";
+        label = "Average";
+        emoji = "🙂";
 
     }
 
@@ -37,47 +53,71 @@ export default function CircularScoreCard({
 
             style={{
 
-                width:220,
+                display: "flex",
 
-                margin:"auto",
+                flexDirection: "column",
 
-                textAlign:"center"
+                alignItems: "center",
+
+                justifyContent: "center"
 
             }}
 
         >
 
-            <CircularProgressbar
-
-                value={score}
-
-                text={`${score}`}
-
-                styles={
-
-                    buildStyles({
-
-                        pathColor: color,
-
-                        textColor: "#ffffff",
-
-                        trailColor: "#333",
-
-                        textSize: "18px"
-
-                    })
-
-                }
-
-            />
-
-            <h3
+            <div
 
                 style={{
 
-                    marginTop:20,
+                    width: 240,
 
-                    color:"white"
+                    height: 240
+
+                }}
+
+            >
+
+                <CircularProgressbar
+
+                    value={score}
+
+                    text={`${score}`}
+
+                    styles={
+
+                        buildStyles({
+
+                            rotation: 0.25,
+
+                            strokeLinecap: "round",
+
+                            pathColor: color,
+
+                            trailColor: "#232323",
+
+                            textColor: "#ffffff",
+
+                            textSize: "18px"
+
+                        })
+
+                    }
+
+                />
+
+            </div>
+
+            <h2
+
+                style={{
+
+                    color: "white",
+
+                    marginTop: "24px",
+
+                    marginBottom: "8px",
+
+                    fontWeight: "700"
 
                 }}
 
@@ -85,19 +125,59 @@ export default function CircularScoreCard({
 
                 Nutrition Score
 
-            </h3>
+            </h2>
 
-            <p
+            <div
 
                 style={{
 
-                    color
+                    background: color,
+
+                    padding: "8px 18px",
+
+                    borderRadius: "999px",
+
+                    fontWeight: "700",
+
+                    color: "white",
+
+                    display: "flex",
+
+                    alignItems: "center",
+
+                    gap: "8px",
+
+                    boxShadow: `0 8px 20px ${color}55`
 
                 }}
 
             >
 
-                {label}
+                <span>{emoji}</span>
+
+                <span>{label}</span>
+
+            </div>
+
+            <p
+
+                style={{
+
+                    marginTop: "18px",
+
+                    color: "#94a3b8",
+
+                    textAlign: "center",
+
+                    lineHeight: "1.6"
+
+                }}
+
+            >
+
+                Keep following your nutrition plan
+                <br />
+                to improve your daily score.
 
             </p>
 

@@ -1,6 +1,10 @@
+import { useState } from "react";
+
 export default function BackButton({
     onClick
 }) {
+
+    const [hover, setHover] = useState(false);
 
     return (
 
@@ -8,27 +12,61 @@ export default function BackButton({
 
             onClick={onClick}
 
+            onMouseEnter={() => setHover(true)}
+
+            onMouseLeave={() => setHover(false)}
+
             style={{
 
                 marginTop: "20px",
 
-                background: "transparent",
+                width: "100%",
 
-                color: "white",
+                padding: "16px",
 
-                border: "1px solid var(--border)",
+                borderRadius: "16px",
 
-                padding: "12px 18px",
+                background: hover
+                    ? "rgba(255,255,255,0.08)"
+                    : "transparent",
 
-                borderRadius: "12px",
+                color: "#cbd5e1",
 
-                cursor: "pointer"
+                border: "1px solid rgba(255,255,255,0.12)",
+
+                cursor: "pointer",
+
+                fontSize: "15px",
+
+                fontWeight: "600",
+
+                transition: "all 0.25s ease",
+
+                display: "flex",
+
+                justifyContent: "center",
+
+                alignItems: "center",
+
+                gap: "10px"
 
             }}
 
         >
 
-            ← Back
+            <span
+                style={{
+                    fontSize: "18px"
+                }}
+            >
+                ←
+            </span>
+
+            <span>
+
+                Back
+
+            </span>
 
         </button>
 

@@ -56,133 +56,210 @@ export default function Step2Profile({
 
     }
 
+    const inputStyle = {
+
+        width: "100%",
+
+        padding: "16px",
+
+        borderRadius: "16px",
+
+        border: "1px solid rgba(255,255,255,.12)",
+
+        background: "#111827",
+
+        color: "white",
+
+        fontSize: "15px",
+
+        outline: "none",
+
+        boxSizing: "border-box"
+
+    };
+
+    const errorStyle = {
+
+        color: "#ef4444",
+
+        fontSize: "13px",
+
+        marginTop: "6px",
+
+        marginBottom: "12px"
+
+    };
+
+    function GenderCard({ value, emoji }) {
+
+        const active = data.gender === value;
+
+        return (
+
+            <div
+
+                onClick={() => updateData("gender", value)}
+
+                style={{
+
+                    flex: 1,
+
+                    cursor: "pointer",
+
+                    padding: "18px",
+
+                    borderRadius: "18px",
+
+                    textAlign: "center",
+
+                    border: active
+                        ? "2px solid #8b5cf6"
+                        : "1px solid rgba(255,255,255,.12)",
+
+                    background: active
+                        ? "rgba(139,92,246,.15)"
+                        : "#111827",
+
+                    transition: ".25s"
+
+                }}
+
+            >
+
+                <div
+                    style={{
+                        fontSize: "34px"
+                    }}
+                >
+                    {emoji}
+                </div>
+
+                <div
+                    style={{
+                        color: "white",
+                        marginTop: "10px"
+                    }}
+                >
+                    {value}
+                </div>
+
+            </div>
+
+        );
+
+    }
+
     return (
 
         <StepCard
 
             title="Personal Information"
 
-            subtitle="These values help our AI personalise your nutrition."
+            subtitle="These values help NutritionOS calculate your calories, BMI and daily nutrition."
 
         >
 
-            <div className="form-group">
+            <input
 
-                <label>Age</label>
+                style={inputStyle}
 
-                <input
+                type="number"
 
-                    type="number"
+                placeholder="🎂 Age"
 
-                    placeholder="Enter your age"
+                value={data.age}
 
-                    value={data.age}
+                onChange={(e)=>
 
-                    onChange={(e)=>
+                    updateData("age",e.target.value)
 
-                        updateData("age",e.target.value)
+                }
 
-                    }
+            />
 
-                />
+            <div style={errorStyle}>{errors.age}</div>
 
-                <small>{errors.age}</small>
+            <div
 
-            </div>
+                style={{
 
-            <div className="form-group">
+                    display:"flex",
 
-                <label>Gender</label>
+                    gap:"15px",
 
-                <select
+                    marginBottom:"10px"
 
-                    value={data.gender}
+                }}
 
-                    onChange={(e)=>
+            >
 
-                        updateData("gender",e.target.value)
+                <GenderCard
 
-                    }
+                    value="Male"
 
-                >
-
-                    <option value="">
-
-                        Select Gender
-
-                    </option>
-
-                    <option value="Male">
-
-                        Male
-
-                    </option>
-
-                    <option value="Female">
-
-                        Female
-
-                    </option>
-
-                    <option value="Other">
-
-                        Other
-
-                    </option>
-
-                </select>
-
-                <small>{errors.gender}</small>
-
-            </div>
-
-            <div className="form-group">
-
-                <label>Height (cm)</label>
-
-                <input
-
-                    type="number"
-
-                    placeholder="170"
-
-                    value={data.height}
-
-                    onChange={(e)=>
-
-                        updateData("height",e.target.value)
-
-                    }
+                    emoji="👨"
 
                 />
 
-                <small>{errors.height}</small>
+                <GenderCard
 
-            </div>
+                    value="Female"
 
-            <div className="form-group">
-
-                <label>Weight (kg)</label>
-
-                <input
-
-                    type="number"
-
-                    placeholder="70"
-
-                    value={data.weight}
-
-                    onChange={(e)=>
-
-                        updateData("weight",e.target.value)
-
-                    }
+                    emoji="👩"
 
                 />
 
-                <small>{errors.weight}</small>
+                <GenderCard
+
+                    value="Other"
+
+                    emoji="🧑"
+
+                />
 
             </div>
+
+            <div style={errorStyle}>{errors.gender}</div>
+
+            <input
+
+                style={inputStyle}
+
+                type="number"
+
+                placeholder="📏 Height (cm)"
+
+                value={data.height}
+
+                onChange={(e)=>
+
+                    updateData("height",e.target.value)
+
+                }
+
+            />
+
+            <div style={errorStyle}>{errors.height}</div>
+
+            <input
+
+                style={inputStyle}
+
+                type="number"
+
+                placeholder="⚖ Weight (kg)"
+
+                value={data.weight}
+
+                onChange={(e)=>
+
+                    updateData("weight",e.target.value)
+
+                }
+
+            />
+
+            <div style={errorStyle}>{errors.weight}</div>
 
             <div
 

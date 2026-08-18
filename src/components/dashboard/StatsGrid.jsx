@@ -8,6 +8,74 @@ export default function StatsGrid({
 
 }) {
 
+    const cards = [
+
+        {
+
+            emoji: "🔥",
+
+            title: "Calories",
+
+            current: consumed.calories,
+
+            target: profile.daily_calories,
+
+            unit: " kcal",
+
+            color: "#ef4444"
+
+        },
+
+        {
+
+            emoji: "🥩",
+
+            title: "Protein",
+
+            current: consumed.protein,
+
+            target: profile.daily_protein,
+
+            unit: " g",
+
+            color: "#22c55e"
+
+        },
+
+        {
+
+            emoji: "🍚",
+
+            title: "Carbs",
+
+            current: consumed.carbs,
+
+            target: profile.daily_carbs,
+
+            unit: " g",
+
+            color: "#3b82f6"
+
+        },
+
+        {
+
+            emoji: "🥑",
+
+            title: "Fat",
+
+            current: consumed.fat,
+
+            target: profile.daily_fat,
+
+            unit: " g",
+
+            color: "#f59e0b"
+
+        }
+
+    ];
+
     return (
 
         <div
@@ -16,61 +84,45 @@ export default function StatsGrid({
 
                 display: "grid",
 
-                gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
+                gridTemplateColumns:
 
-                gap: "20px"
+                    "repeat(auto-fit,minmax(300px,1fr))",
+
+                gap: "24px",
+
+                marginTop: "30px",
+
+                marginBottom: "30px"
 
             }}
 
         >
 
-            <DashboardCard
+            {
 
-                emoji="🔥"
+                cards.map((card) => (
 
-                title="Calories"
+                    <DashboardCard
 
-                current={consumed.calories}
+                        key={card.title}
 
-                target={profile.daily_calories}
+                        title={card.title}
 
-            />
+                        emoji={card.emoji}
 
-            <DashboardCard
+                        current={card.current}
 
-                emoji="🥩"
+                        target={card.target}
 
-                title="Protein"
+                        unit={card.unit}
 
-                current={consumed.protein}
+                        color={card.color}
 
-                target={profile.daily_protein}
+                    />
 
-            />
+                ))
 
-            <DashboardCard
-
-                emoji="🍚"
-
-                title="Carbs"
-
-                current={consumed.carbs}
-
-                target={profile.daily_carbs}
-
-            />
-
-            <DashboardCard
-
-                emoji="🥑"
-
-                title="Fat"
-
-                current={consumed.fat}
-
-                target={profile.daily_fat}
-
-            />
+            }
 
         </div>
 

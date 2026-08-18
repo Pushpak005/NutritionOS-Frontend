@@ -1,126 +1,150 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
 import { getRestaurantMenu } from "../../services/restaurantService";
 import { logMeal } from "../../services/mealService";
 
+import DishCard from "../../components/cards/DishCard";
+
 export default function Menu() {
 
-  const { id } = useParams();
+    const { id } = useParams();
 
-  const [menu, setMenu] = useState([]);
+    const [menu, setMenu] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+    useEffect(() => {
 
-    async function loadMenu() {
+        async function loadMenu() {
 
-      try {
+            try {
 
-        const data = await getRestaurantMenu(id);
+                const data = await getRestaurantMenu(id);
 
-        setMenu(data);
+                setMenu(data);
 
-      } catch (err) {
+            }
 
-        console.error(err);
+            catch (err) {
 
-      }
+                console.error(err);
+
+            }
+
+            finally {
+
+                setLoading(false);
+
+            }
+
+        }
+
+        loadMenu();
+
+    }, [id]);
+
+    async function handleLogMeal(item) {
+
+        try {
+
+            await logMeal(
+
+                item.id,
+                item.meal_type,
+                1
+
+            );
+
+            alert("✅ Meal Logged Successfully");
+
+        }
+
+        catch (err) {
+
+            console.error(err);
+
+            alert("❌ Failed to Log Meal");
+
+        }
 
     }
 
-    loadMenu();
+    if (loading) {
 
-  }, [id]);
+        return (
 
-  async function handleLogMeal(item) {
+            <h2
 
-    try {
+                style={{
 
-      await logMeal(
-        item.id,
-        item.meal_type,
-        1
-      );
+                    color: "white",
+                    textAlign: "center",
+                    marginTop: "100px"
 
-      alert("✅ Meal Logged Successfully");
+                }}
 
-    } catch (err) {
-
-      console.error(err);
-
-      alert("❌ Failed to Log Meal");
-
-    }
-
-  }
-
-  return (
-
-    <div
-      style={{
-        padding: "30px",
-        color: "white"
-      }}
-    >
-
-      <h1>Restaurant Menu</h1>
-
-      <hr />
-
-      {
-
-        menu.map((item) => (
-
-          <div
-            key={item.id}
-            style={{
-              border: "1px solid gray",
-              padding: "20px",
-              marginBottom: "20px",
-              borderRadius: "10px"
-            }}
-          >
-
-            <h2>{item.dish_name}</h2>
-
-            <p>Category : {item.category}</p>
-
-            <p>Meal Type : {item.meal_type}</p>
-
-            <p>₹ {item.price}</p>
-
-            <p>🔥 Calories : {item.calories}</p>
-
-            <p>🥩 Protein : {item.protein} g</p>
-
-            <p>🍚 Carbs : {item.carbs} g</p>
-
-            <p>🥑 Fat : {item.fat} g</p>
-
-            <p>🌾 Fiber : {item.fiber} g</p>
-
-            <button
-              onClick={() => handleLogMeal(item)}
-              style={{
-                marginTop: "10px",
-                padding: "10px 18px",
-                background: "#7c3aed",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer"
-              }}
             >
-              Log Meal
-            </button>
 
-          </div>
+                Loading Menu...
 
-        ))
+            </h2>
 
-      }
+        );
 
-    </div>
+    }
 
-  );
+    return (
+
+        <div
+
+            style={{
+
+                maxWidth: "1200px",
+                margin: "0 auto",
+                padding: "30px",
+                color: "white"
+
+            }}
+
+        >
+
+            <h1>🍽 Restaurant Menu</h1>
+
+            <div
+
+                style={{
+
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+                    gap: "24px",
+                    marginTop: "30px"
+
+                }}
+
+            >
+
+                {
+
+                    menu.map((item) => (
+
+                        <DishCard
+
+                            key={item.id}
+
+                            dish={item}
+
+                            onLogMeal={handleLogMeal}
+
+                        />
+
+                    ))
+
+                }
+
+            </div>
+
+        </div>
+
+    );
 
 }

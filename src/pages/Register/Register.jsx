@@ -1,5 +1,7 @@
-function Register() {
-  return <h1>Register Page</h1>;
-}
+import { Navigate } from "react-router-dom";
 
-export default Register;
+export default function Register() {
+
+    return <Navigate to="/onboarding" replace />;
+
+}

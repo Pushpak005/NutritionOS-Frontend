@@ -10,61 +10,175 @@ export default function Step5Devices({
 
 }) {
 
+    function DeviceCard({
+
+        emoji,
+
+        title,
+
+        description
+
+    }) {
+
+        return (
+
+            <div
+
+                style={{
+
+                    display: "flex",
+
+                    justifyContent: "space-between",
+
+                    alignItems: "center",
+
+                    background: "#111827",
+
+                    border: "1px solid rgba(255,255,255,.08)",
+
+                    borderRadius: "18px",
+
+                    padding: "20px",
+
+                    marginBottom: "16px"
+
+                }}
+
+            >
+
+                <div>
+
+                    <div
+                        style={{
+                            color: "white",
+                            fontSize: "20px",
+                            fontWeight: "700"
+                        }}
+                    >
+                        {emoji} {title}
+                    </div>
+
+                    <div
+                        style={{
+                            color: "#94a3b8",
+                            marginTop: "6px",
+                            fontSize: "14px"
+                        }}
+                    >
+                        {description}
+                    </div>
+
+                </div>
+
+                <button
+
+                    disabled
+
+                    style={{
+
+                        background: "#1f2937",
+
+                        color: "#9ca3af",
+
+                        border: "1px solid rgba(255,255,255,.08)",
+
+                        padding: "10px 18px",
+
+                        borderRadius: "12px",
+
+                        cursor: "not-allowed",
+
+                        fontWeight: "600"
+
+                    }}
+
+                >
+
+                    Coming Soon
+
+                </button>
+
+            </div>
+
+        );
+
+    }
+
     return (
 
         <StepCard
 
             title="Connect Your Devices"
 
-            subtitle="Sync your health data automatically."
+            subtitle="NutritionOS can automatically personalize your recommendations using your wearable data."
 
         >
 
-            <div className="device-card">
+            <DeviceCard
 
-                ⌚ Fitbit
+                emoji="⌚"
 
-                <button disabled>
+                title="Fitbit"
 
-                    Coming Soon
+                description="Sync steps, calories burned and activity."
 
-                </button>
+            />
 
-            </div>
+            <DeviceCard
 
-            <div className="device-card">
+                emoji="🍎"
 
-                🍎 Apple Health
+                title="Apple Health"
 
-                <button disabled>
+                description="Import workouts, sleep and health metrics."
 
-                    Coming Soon
+            />
 
-                </button>
+            <DeviceCard
 
-            </div>
+                emoji="🤖"
 
-            <div className="device-card">
+                title="Google Fit"
 
-                🤖 Google Fit
+                description="Automatically track activity and energy burn."
 
-                <button disabled>
+            />
 
-                    Coming Soon
+            <DeviceCard
 
-                </button>
+                emoji="⌚"
 
-            </div>
+                title="Garmin"
 
-            <div className="device-card">
+                description="Use Garmin training and recovery metrics."
 
-                ⌚ Garmin
+            />
 
-                <button disabled>
+            <div
 
-                    Coming Soon
+                style={{
 
-                </button>
+                    background: "rgba(139,92,246,.10)",
+
+                    border: "1px solid rgba(139,92,246,.30)",
+
+                    color: "#d8b4fe",
+
+                    padding: "16px",
+
+                    borderRadius: "16px",
+
+                    marginTop: "20px",
+
+                    fontSize: "14px",
+
+                    lineHeight: "1.6"
+
+                }}
+
+            >
+
+                💡 You can skip this step for now. Device integrations will be available in an upcoming update.
 
             </div>
 
