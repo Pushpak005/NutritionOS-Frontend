@@ -1,41 +1,78 @@
-.dashboard-container{
-
-    display:grid;
-
-    grid-template-columns:2fr 1fr;
-
-    gap:25px;
-
-    margin-top:30px;
-
+.dashboard-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(380px, 1fr);
+    gap: 28px;
+    margin-top: 30px;
+    align-items: start;
 }
 
-.dashboard-left{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:25px;
-
+.dashboard-left {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    min-width: 0;
 }
 
-.dashboard-right{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:25px;
-
+.dashboard-right {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    min-width: 0;
 }
 
-@media(max-width:1000px){
-
-.dashboard-container{
-
-grid-template-columns:1fr;
-
+/*
+ * The AI recommendation card contains a fairly dense visual layout.
+ * Give the right dashboard column enough width so its image, title,
+ * restaurant information and metric cards remain readable.
+ */
+.dashboard-right .today-pick-main {
+    min-width: 0;
 }
 
+/*
+ * Prevent dashboard cards from overflowing their grid tracks.
+ */
+.dashboard-left > *,
+.dashboard-right > * {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/*
+ * At medium desktop widths, give both dashboard areas a more balanced
+ * presentation rather than squeezing the AI card into a narrow sidebar.
+ */
+@media (max-width: 1250px) {
+    .dashboard-container {
+        grid-template-columns: minmax(0, 1fr) minmax(350px, 0.9fr);
+        gap: 22px;
+    }
+}
+
+/*
+ * Tablet / narrow screens:
+ * stack the dashboard sections vertically.
+ */
+@media (max-width: 1000px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+}
+
+/*
+ * Mobile:
+ * keep the dashboard comfortably inside the viewport.
+ */
+@media (max-width: 600px) {
+    .dashboard-container {
+        margin-top: 20px;
+        gap: 18px;
+    }
+
+    .dashboard-left,
+    .dashboard-right {
+        gap: 18px;
+    }
 }

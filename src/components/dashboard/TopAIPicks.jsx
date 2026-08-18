@@ -73,29 +73,30 @@ export default function TopAIPicks({
     return (
         <div
             style={{
-                marginBottom: "32px",
                 width: "100%",
                 minWidth: 0,
+                marginBottom: "40px",
                 boxSizing: "border-box"
             }}
         >
+            {/* SECTION HEADER */}
             <div
                 className="top-picks-header"
                 style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    alignItems: "end",
-                    gap: "14px",
-                    marginBottom: "20px"
+                    alignItems: "flex-end",
+                    gap: "16px",
+                    marginBottom: "22px"
                 }}
             >
                 <div>
                     <div
                         style={{
                             color: "#A78BFA",
-                            fontWeight: "800",
+                            fontWeight: "900",
                             fontSize: "13px",
-                            letterSpacing: ".7px",
+                            letterSpacing: ".8px",
                             textTransform: "uppercase",
                             marginBottom: "6px"
                         }}
@@ -109,19 +110,31 @@ export default function TopAIPicks({
                             margin: 0,
                             color: "white",
                             fontSize: "30px",
-                            fontWeight: "900",
-                            letterSpacing: "-.5px"
+                            lineHeight: "1.15",
+                            fontWeight: "950",
+                            letterSpacing: "-.6px"
                         }}
                     >
                         Similar Meals You May Like
                     </h2>
+
+                    <p
+                        style={{
+                            margin: "7px 0 0",
+                            color: "#64748B",
+                            fontSize: "14px",
+                            fontWeight: "600"
+                        }}
+                    >
+                        Other meals that fit your current nutrition profile
+                    </p>
                 </div>
 
                 <div
                     style={{
                         color: "#94A3B8",
                         fontSize: "14px",
-                        fontWeight: "700",
+                        fontWeight: "800",
                         whiteSpace: "nowrap"
                     }}
                 >
@@ -129,13 +142,14 @@ export default function TopAIPicks({
                 </div>
             </div>
 
+            {/* CARDS GRID */}
             <div
                 className="top-picks-grid"
                 style={{
                     display: "grid",
                     gridTemplateColumns:
                         "repeat(auto-fill,minmax(285px,1fr))",
-                    gap: "18px",
+                    gap: "20px",
                     width: "100%",
                     minWidth: 0
                 }}
@@ -151,59 +165,75 @@ export default function TopAIPicks({
                         );
 
                     const price =
-                        meal.price ?? "--";
+                        meal.price !== null &&
+                        meal.price !== undefined &&
+                        meal.price !== ""
+                            ? `₹${meal.price}`
+                            : "₹--";
+
+                    const match =
+                        meal.match_percentage ??
+                        meal.score ??
+                        0;
 
                     return (
                         <div
                             key={mealId}
+                            className="top-ai-pick-card"
                             onClick={() =>
                                 navigate(
                                     `/dish/${mealId}`
                                 )
                             }
                             style={{
+                                position: "relative",
                                 background:
-                                    "linear-gradient(145deg,#15132A,#111827)",
+                                    "linear-gradient(145deg,#17142D 0%,#1E1B4B 55%,#111827 100%)",
                                 borderRadius: "22px",
                                 overflow: "hidden",
                                 border:
-                                    "1px solid rgba(139,92,246,.18)",
+                                    "1px solid rgba(139,92,246,.20)",
                                 cursor: "pointer",
                                 transition:
-                                    "transform .25s ease, box-shadow .25s ease, border-color .25s ease",
+                                    "transform .22s ease, box-shadow .22s ease, border-color .22s ease",
                                 display: "flex",
                                 flexDirection: "column",
                                 minWidth: 0,
                                 width: "100%",
-                                boxSizing: "border-box"
+                                boxSizing: "border-box",
+                                boxShadow:
+                                    "0 12px 30px rgba(0,0,0,.18)"
                             }}
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.transform =
                                     "translateY(-5px)";
 
                                 e.currentTarget.style.boxShadow =
-                                    "0 20px 45px rgba(0,0,0,.32)";
+                                    "0 24px 50px rgba(0,0,0,.34)";
 
                                 e.currentTarget.style.borderColor =
-                                    "rgba(139,92,246,.42)";
+                                    "rgba(139,92,246,.48)";
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.transform =
                                     "translateY(0)";
 
                                 e.currentTarget.style.boxShadow =
-                                    "none";
+                                    "0 12px 30px rgba(0,0,0,.18)";
 
                                 e.currentTarget.style.borderColor =
-                                    "rgba(139,92,246,.18)";
+                                    "rgba(139,92,246,.20)";
                             }}
                         >
+                            {/* IMAGE */}
                             <div
                                 style={{
                                     position: "relative",
                                     width: "100%",
+                                    height: "205px",
                                     overflow: "hidden",
-                                    background: "#111827"
+                                    background: "#111827",
+                                    flexShrink: 0
                                 }}
                             >
                                 <img
@@ -212,26 +242,31 @@ export default function TopAIPicks({
                                     )}
                                     alt={dishName}
                                     onError={(e) => {
-                                        e.target.src =
-                                            "https://placehold.co/600x400?text=NutritionOS";
+                                        e.currentTarget.style.opacity =
+                                            "0";
                                     }}
                                     style={{
                                         width: "100%",
-                                        height: "205px",
+                                        height: "100%",
                                         objectFit: "cover",
-                                        display: "block"
+                                        display: "block",
+                                        transition:
+                                            "transform .35s ease"
                                     }}
                                 />
 
+                                {/* IMAGE OVERLAY */}
                                 <div
                                     style={{
                                         position: "absolute",
                                         inset: 0,
                                         background:
-                                            "linear-gradient(to top,rgba(0,0,0,.58),rgba(0,0,0,0) 60%)"
+                                            "linear-gradient(to top,rgba(8,8,20,.78),rgba(8,8,20,0) 62%)",
+                                        pointerEvents: "none"
                                     }}
                                 />
 
+                                {/* TOP BADGES */}
                                 <div
                                     style={{
                                         position: "absolute",
@@ -246,14 +281,14 @@ export default function TopAIPicks({
                                     <span
                                         style={{
                                             background:
-                                                "rgba(17,24,39,.88)",
+                                                "rgba(17,24,39,.90)",
                                             color: "#86EFAC",
                                             border:
-                                                "1px solid rgba(134,239,172,.24)",
+                                                "1px solid rgba(134,239,172,.25)",
                                             padding: "6px 9px",
                                             borderRadius: "999px",
                                             fontSize: "11px",
-                                            fontWeight: "800",
+                                            fontWeight: "900",
                                             backdropFilter:
                                                 "blur(8px)"
                                         }}
@@ -267,13 +302,13 @@ export default function TopAIPicks({
                                         style={{
                                             background:
                                                 meal.is_veg
-                                                    ? "rgba(22,101,52,.88)"
-                                                    : "rgba(127,29,29,.88)",
+                                                    ? "rgba(22,101,52,.90)"
+                                                    : "rgba(127,29,29,.90)",
                                             color: "white",
                                             padding: "6px 9px",
                                             borderRadius: "999px",
                                             fontSize: "11px",
-                                            fontWeight: "800"
+                                            fontWeight: "900"
                                         }}
                                     >
                                         {meal.is_veg
@@ -282,33 +317,31 @@ export default function TopAIPicks({
                                     </span>
                                 </div>
 
+                                {/* MATCH */}
                                 <div
                                     style={{
                                         position: "absolute",
                                         top: "12px",
                                         right: "12px",
                                         background:
-                                            "rgba(6,78,59,.88)",
+                                            "rgba(6,78,59,.92)",
                                         color: "#86EFAC",
                                         border:
-                                            "1px solid rgba(134,239,172,.30)",
+                                            "1px solid rgba(134,239,172,.32)",
                                         padding: "7px 10px",
                                         borderRadius: "999px",
-                                        fontWeight: "900",
+                                        fontWeight: "950",
                                         fontSize: "12px",
                                         whiteSpace: "nowrap",
                                         backdropFilter:
                                             "blur(8px)"
                                     }}
                                 >
-                                    🎯{" "}
-                                    {meal.match_percentage ??
-                                        meal.score ??
-                                        0}
-                                    %
+                                    🎯 {match}% match
                                 </div>
                             </div>
 
+                            {/* CONTENT */}
                             <div
                                 style={{
                                     padding: "18px",
@@ -319,40 +352,83 @@ export default function TopAIPicks({
                                     boxSizing: "border-box"
                                 }}
                             >
+                                {/* MEAL TYPE */}
                                 <div
                                     style={{
-                                        color: "#94A3B8",
-                                        fontSize: "11px",
-                                        fontWeight: "800",
+                                        color: "#A5B4FC",
+                                        fontSize: "10px",
+                                        fontWeight: "900",
                                         textTransform: "uppercase",
-                                        letterSpacing: ".8px"
+                                        letterSpacing: "1px"
                                     }}
                                 >
                                     {meal.meal_type ||
                                         "Recommended meal"}
                                 </div>
 
-                                <h3
+                                {/* DISH NAME + PRICE */}
+                                <div
                                     style={{
-                                        color: "white",
-                                        margin: "6px 0 0",
-                                        fontSize: "21px",
-                                        lineHeight: "1.22",
-                                        fontWeight: "900",
-                                        minHeight: "52px",
-                                        overflowWrap: "anywhere"
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent:
+                                            "space-between",
+                                        gap: "10px",
+                                        marginTop: "6px",
+                                        minWidth: 0
                                     }}
                                 >
-                                    {dishName}
-                                </h3>
+                                    <h3
+                                        style={{
+                                            color: "white",
+                                            margin: 0,
+                                            fontSize: "21px",
+                                            lineHeight: "1.18",
+                                            fontWeight: "950",
+                                            letterSpacing: "-.3px",
+                                            minWidth: 0,
+                                            flex: 1,
+                                            overflowWrap:
+                                                "break-word",
+                                            wordBreak:
+                                                "normal"
+                                        }}
+                                    >
+                                        {dishName}
+                                    </h3>
 
-                                <p
+                                    {/* STRONG PRICE */}
+                                    <div
+                                        style={{
+                                            flexShrink: 0,
+                                            background:
+                                                "linear-gradient(135deg,rgba(250,204,21,.18),rgba(234,179,8,.08))",
+                                            border:
+                                                "1px solid rgba(250,204,21,.40)",
+                                            color: "#FDE047",
+                                            padding: "7px 9px",
+                                            borderRadius: "10px",
+                                            fontSize: "17px",
+                                            lineHeight: "1",
+                                            fontWeight: "950",
+                                            whiteSpace:
+                                                "nowrap",
+                                            boxShadow:
+                                                "0 7px 18px rgba(250,204,21,.08)"
+                                        }}
+                                    >
+                                        {price}
+                                    </div>
+                                </div>
+
+                                {/* RESTAURANT */}
+                                <div
                                     style={{
                                         color: "#94A3B8",
-                                        margin:
-                                            "8px 0 16px",
-                                        fontSize: "14px",
-                                        fontWeight: "600",
+                                        marginTop: "9px",
+                                        fontSize: "13px",
+                                        fontWeight: "700",
+                                        minHeight: "20px",
                                         overflowWrap:
                                             "anywhere"
                                     }}
@@ -360,33 +436,37 @@ export default function TopAIPicks({
                                     📍{" "}
                                     {meal.restaurant_name ||
                                         "Restaurant"}
-                                </p>
+                                </div>
 
+                                {/* METRICS */}
                                 <div
                                     style={{
                                         display: "grid",
                                         gridTemplateColumns:
-                                            "repeat(2,minmax(0,1fr))",
-                                        gap: "9px",
+                                            "repeat(3,minmax(0,1fr))",
+                                        gap: "8px",
+                                        marginTop: "16px",
                                         minWidth: 0
                                     }}
                                 >
+                                    {/* CALORIES */}
                                     <div
                                         style={{
                                             background:
                                                 "rgba(255,255,255,.055)",
                                             border:
-                                                "1px solid rgba(255,255,255,.07)",
-                                            borderRadius: "14px",
+                                                "1px solid rgba(255,255,255,.08)",
+                                            borderRadius: "13px",
                                             padding:
-                                                "12px 7px",
-                                            textAlign: "center"
+                                                "11px 5px",
+                                            textAlign: "center",
+                                            minWidth: 0
                                         }}
                                     >
                                         <div
                                             style={{
                                                 fontSize:
-                                                    "17px"
+                                                    "16px"
                                             }}
                                         >
                                             🔥
@@ -395,13 +475,17 @@ export default function TopAIPicks({
                                         <div
                                             style={{
                                                 marginTop:
-                                                    "4px",
+                                                    "3px",
                                                 color:
                                                     "#FFB84D",
                                                 fontWeight:
-                                                    "900",
+                                                    "950",
                                                 fontSize:
-                                                    "17px"
+                                                    "17px",
+                                                lineHeight:
+                                                    "1.1",
+                                                whiteSpace:
+                                                    "nowrap"
                                             }}
                                         >
                                             {meal.calories ??
@@ -413,33 +497,37 @@ export default function TopAIPicks({
                                                 color:
                                                     "#64748B",
                                                 fontSize:
-                                                    "10px",
+                                                    "9px",
                                                 fontWeight:
-                                                    "800",
+                                                    "900",
                                                 marginTop:
-                                                    "3px"
+                                                    "4px",
+                                                letterSpacing:
+                                                    ".5px"
                                             }}
                                         >
                                             KCAL
                                         </div>
                                     </div>
 
+                                    {/* PROTEIN */}
                                     <div
                                         style={{
                                             background:
                                                 "rgba(255,255,255,.055)",
                                             border:
-                                                "1px solid rgba(255,255,255,.07)",
-                                            borderRadius: "14px",
+                                                "1px solid rgba(255,255,255,.08)",
+                                            borderRadius: "13px",
                                             padding:
-                                                "12px 7px",
-                                            textAlign: "center"
+                                                "11px 5px",
+                                            textAlign: "center",
+                                            minWidth: 0
                                         }}
                                     >
                                         <div
                                             style={{
                                                 fontSize:
-                                                    "17px"
+                                                    "16px"
                                             }}
                                         >
                                             💪
@@ -448,13 +536,17 @@ export default function TopAIPicks({
                                         <div
                                             style={{
                                                 marginTop:
-                                                    "4px",
+                                                    "3px",
                                                 color:
                                                     "#60A5FA",
                                                 fontWeight:
-                                                    "900",
+                                                    "950",
                                                 fontSize:
-                                                    "17px"
+                                                    "17px",
+                                                lineHeight:
+                                                    "1.1",
+                                                whiteSpace:
+                                                    "nowrap"
                                             }}
                                         >
                                             {meal.protein ??
@@ -467,38 +559,40 @@ export default function TopAIPicks({
                                                 color:
                                                     "#64748B",
                                                 fontSize:
-                                                    "10px",
+                                                    "9px",
                                                 fontWeight:
-                                                    "800",
+                                                    "900",
                                                 marginTop:
-                                                    "3px"
+                                                    "4px",
+                                                letterSpacing:
+                                                    ".5px"
                                             }}
                                         >
                                             PROTEIN
                                         </div>
                                     </div>
 
+                                    {/* RATING */}
                                     <div
                                         style={{
                                             background:
-                                                "rgba(250,204,21,.055)",
+                                                "rgba(255,255,255,.055)",
                                             border:
-                                                "1px solid rgba(250,204,21,.18)",
-                                            borderRadius: "14px",
+                                                "1px solid rgba(255,255,255,.08)",
+                                            borderRadius: "13px",
                                             padding:
-                                                "12px 7px",
-                                            textAlign: "center"
+                                                "11px 5px",
+                                            textAlign: "center",
+                                            minWidth: 0
                                         }}
                                     >
                                         <div
                                             style={{
                                                 fontSize:
-                                                    "17px",
-                                                color:
-                                                    "#FACC15"
+                                                    "16px"
                                             }}
                                         >
-                                            ₹
+                                            ⭐
                                         </div>
 
                                         <div
@@ -508,61 +602,13 @@ export default function TopAIPicks({
                                                 color:
                                                     "#FACC15",
                                                 fontWeight:
-                                                    "900",
+                                                    "950",
                                                 fontSize:
-                                                    "21px"
-                                            }}
-                                        >
-                                            ₹{price}
-                                        </div>
-
-                                        <div
-                                            style={{
-                                                color:
-                                                    "#A16207",
-                                                fontSize:
-                                                    "10px",
-                                                fontWeight:
-                                                    "900",
-                                                marginTop:
-                                                    "2px"
-                                            }}
-                                        >
-                                            PRICE
-                                        </div>
-                                    </div>
-
-                                    <div
-                                        style={{
-                                            background:
-                                                "rgba(255,255,255,.055)",
-                                            border:
-                                                "1px solid rgba(255,255,255,.07)",
-                                            borderRadius: "14px",
-                                            padding:
-                                                "12px 7px",
-                                            textAlign: "center"
-                                        }}
-                                    >
-                                        <div
-                                            style={{
-                                                fontSize:
-                                                    "17px"
-                                            }}
-                                        >
-                                            ⭐
-                                        </div>
-
-                                        <div
-                                            style={{
-                                                marginTop:
-                                                    "4px",
-                                                color:
-                                                    "#FACC15",
-                                                fontWeight:
-                                                    "900",
-                                                fontSize:
-                                                    "17px"
+                                                    "17px",
+                                                lineHeight:
+                                                    "1.1",
+                                                whiteSpace:
+                                                    "nowrap"
                                             }}
                                         >
                                             {meal.rating ??
@@ -574,11 +620,13 @@ export default function TopAIPicks({
                                                 color:
                                                     "#64748B",
                                                 fontSize:
-                                                    "10px",
+                                                    "9px",
                                                 fontWeight:
-                                                    "800",
+                                                    "900",
                                                 marginTop:
-                                                    "3px"
+                                                    "4px",
+                                                letterSpacing:
+                                                    ".5px"
                                             }}
                                         >
                                             RATING
@@ -586,101 +634,117 @@ export default function TopAIPicks({
                                     </div>
                                 </div>
 
-                                <button
-                                    onClick={(e) =>
-                                        handleLogMeal(
-                                            e,
-                                            meal
-                                        )
-                                    }
-                                    disabled={
-                                        loggingMealId ===
+                                {/* ACTIONS */}
+                                <div
+                                    style={{
+                                        marginTop: "16px"
+                                    }}
+                                >
+                                    <button
+                                        onClick={(e) =>
+                                            handleLogMeal(
+                                                e,
+                                                meal
+                                            )
+                                        }
+                                        disabled={
+                                            loggingMealId ===
+                                            mealId
+                                        }
+                                        style={{
+                                            width: "100%",
+                                            border: "none",
+                                            background:
+                                                loggedMealId ===
+                                                mealId
+                                                    ? "#15803D"
+                                                    : "linear-gradient(135deg,#22C55E,#16A34A)",
+                                            color: "white",
+                                            padding: "12px",
+                                            borderRadius:
+                                                "12px",
+                                            cursor:
+                                                loggingMealId ===
+                                                mealId
+                                                    ? "wait"
+                                                    : "pointer",
+                                            fontWeight: "950",
+                                            fontSize: "13px",
+                                            opacity:
+                                                loggingMealId ===
+                                                mealId
+                                                    ? 0.7
+                                                    : 1,
+                                            boxShadow:
+                                                "0 8px 18px rgba(34,197,94,.12)"
+                                        }}
+                                    >
+                                        {loggingMealId ===
                                         mealId
-                                    }
-                                    style={{
-                                        marginTop: "17px",
-                                        border: "none",
-                                        background:
-                                            loggedMealId ===
-                                            mealId
-                                                ? "#15803D"
-                                                : "linear-gradient(135deg,#22C55E,#16A34A)",
-                                        color: "white",
-                                        padding: "13px",
-                                        borderRadius: "13px",
-                                        cursor:
-                                            loggingMealId ===
-                                            mealId
-                                                ? "wait"
-                                                : "pointer",
-                                        fontWeight: "900",
-                                        fontSize: "14px",
-                                        width: "100%",
-                                        opacity:
-                                            loggingMealId ===
-                                            mealId
-                                                ? 0.7
-                                                : 1,
-                                        boxShadow:
-                                            "0 8px 18px rgba(34,197,94,.12)"
-                                    }}
-                                >
-                                    {loggingMealId ===
-                                    mealId
-                                        ? "Logging..."
-                                        : loggedMealId ===
-                                          mealId
-                                        ? "✓ Meal Logged"
-                                        : "🍽 Log Meal"}
-                                </button>
+                                            ? "Logging..."
+                                            : loggedMealId ===
+                                              mealId
+                                            ? "✓ Meal Logged"
+                                            : "🍽 Log Meal"}
+                                    </button>
 
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
 
-                                        navigate(
-                                            `/dish/${mealId}`
-                                        );
-                                    }}
-                                    style={{
-                                        marginTop: "9px",
-                                        border:
-                                            "1px solid rgba(255,255,255,.12)",
-                                        background:
-                                            "rgba(255,255,255,.035)",
-                                        color: "#E2E8F0",
-                                        padding: "13px",
-                                        borderRadius: "13px",
-                                        cursor: "pointer",
-                                        fontWeight: "800",
-                                        fontSize: "14px",
-                                        width: "100%"
-                                    }}
-                                >
-                                    View Details →
-                                </button>
+                                            navigate(
+                                                `/dish/${mealId}`
+                                            );
+                                        }}
+                                        style={{
+                                            width: "100%",
+                                            marginTop: "8px",
+                                            border:
+                                                "1px solid rgba(255,255,255,.12)",
+                                            background:
+                                                "rgba(255,255,255,.035)",
+                                            color:
+                                                "#E2E8F0",
+                                            padding: "12px",
+                                            borderRadius:
+                                                "12px",
+                                            cursor: "pointer",
+                                            fontWeight: "900",
+                                            fontSize: "13px"
+                                        }}
+                                    >
+                                        🔍 View Details →
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     );
                 })}
             </div>
 
+            {/* RESPONSIVE */}
             <style>
                 {`
-                    @media (max-width: 767px) {
+                    @media (max-width: 900px) {
+                        .top-picks-grid {
+                            grid-template-columns:
+                                repeat(2,minmax(0,1fr)) !important;
+                        }
+                    }
+
+                    @media (max-width: 600px) {
                         .top-picks-header {
                             align-items: flex-start !important;
                             flex-direction: column !important;
                         }
 
                         .top-picks-title {
-                            font-size: 24px !important;
-                            line-height: 1.25 !important;
+                            font-size: 25px !important;
                         }
 
                         .top-picks-grid {
-                            grid-template-columns: 1fr !important;
-                            gap: 14px !important;
+                            grid-template-columns:
+                                1fr !important;
                         }
                     }
                 `}
