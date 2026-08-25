@@ -18,6 +18,19 @@ export async function logMeal(
         }
     );
 
-    return response.data;
+    /*
+     * NutritionOS state has changed successfully.
+     *
+     * Dashboard listens for this event and refreshes:
+     * - dashboard metrics
+     * - nutrition score
+     * - calories chart
+     * - today's meals
+     * - recommendation state
+     */
+    window.dispatchEvent(
+        new CustomEvent("nutrition-state-updated")
+    );
 
+    return response.data;
 }
