@@ -6,12 +6,14 @@ import { logMeal } from "../../services/mealService";
 
 import DishCard from "../../components/cards/DishCard";
 
+
 export default function Menu() {
 
     const { id } = useParams();
 
     const [menu, setMenu] = useState([]);
     const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
 
@@ -43,17 +45,22 @@ export default function Menu() {
 
     }, [id]);
 
+
     async function handleLogMeal(item) {
 
         try {
 
             await logMeal(
-
                 item.id,
                 item.meal_type,
                 1
-
             );
+
+
+            window.dispatchEvent(
+                new Event("nutrition-state-updated")
+            );
+
 
             alert("✅ Meal Logged Successfully");
 
@@ -69,76 +76,60 @@ export default function Menu() {
 
     }
 
+
     if (loading) {
 
         return (
 
             <h2
-
                 style={{
-
                     color: "white",
                     textAlign: "center",
                     marginTop: "100px"
-
                 }}
-
             >
-
                 Loading Menu...
-
             </h2>
 
         );
 
     }
 
+
     return (
 
         <div
-
             style={{
-
                 maxWidth: "1200px",
                 margin: "0 auto",
                 padding: "30px",
                 color: "white"
-
             }}
-
         >
 
             <h1>🍽 Restaurant Menu</h1>
 
+
             <div
-
                 style={{
-
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+                    gridTemplateColumns:
+                        "repeat(auto-fit, minmax(340px, 1fr))",
                     gap: "24px",
                     marginTop: "30px"
-
                 }}
-
             >
 
                 {
-
                     menu.map((item) => (
 
                         <DishCard
-
                             key={item.id}
-
                             dish={item}
-
                             onLogMeal={handleLogMeal}
-
                         />
 
                     ))
-
                 }
 
             </div>

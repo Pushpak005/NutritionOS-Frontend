@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { getDashboard } from "../../services/dashboardService";
 
@@ -18,33 +18,60 @@ export default function Dashboard() {
     const [dashboard, setDashboard] = useState(null);
 
 
+    const loadDashboard = useCallback(async () => {
+
+        try {
+
+            const data = await getDashboard();
+
+            setDashboard(data);
+
+        }
+
+        catch (err) {
+
+            console.error(
+                "Dashboard loading error:",
+                err
+            );
+
+        }
+
+    }, []);
+
+
     useEffect(() => {
 
-        async function loadDashboard() {
+        loadDashboard();
 
-            try {
+    }, [loadDashboard]);
 
-                const data = await getDashboard();
 
-                setDashboard(data);
+    useEffect(() => {
 
-            }
+        function handleNutritionStateUpdated() {
 
-            catch (err) {
-
-                console.error(
-                    "Dashboard loading error:",
-                    err
-                );
-
-            }
+            loadDashboard();
 
         }
 
 
-        loadDashboard();
+        window.addEventListener(
+            "nutrition-state-updated",
+            handleNutritionStateUpdated
+        );
 
-    }, []);
+
+        return () => {
+
+            window.removeEventListener(
+                "nutrition-state-updated",
+                handleNutritionStateUpdated
+            );
+
+        };
+
+    }, [loadDashboard]);
 
 
     if (!dashboard) {
