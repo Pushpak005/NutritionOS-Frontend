@@ -17,6 +17,17 @@ export default function Dashboard() {
 
     const [dashboard, setDashboard] = useState(null);
 
+    /*
+     * Used to refresh dashboard child components which maintain
+     * their own API state.
+     *
+     * Example:
+     * - NutritionScoreCard
+     * - CaloriesChart
+     * - TodaysMeals
+     */
+    const [refreshKey, setRefreshKey] = useState(0);
+
 
     const loadDashboard = useCallback(async () => {
 
@@ -40,6 +51,9 @@ export default function Dashboard() {
     }, []);
 
 
+    /*
+     * Initial dashboard load.
+     */
     useEffect(() => {
 
         loadDashboard();
@@ -47,9 +61,28 @@ export default function Dashboard() {
     }, [loadDashboard]);
 
 
+    /*
+     * Central NutritionOS state update listener.
+     *
+     * Whenever a meal is logged:
+     *
+     * Meal Log
+     *    ↓
+     * nutrition-state-updated
+     *    ↓
+     * Dashboard API refresh
+     *    ↓
+     * refreshKey changes
+     *    ↓
+     * Dashboard child data refreshes
+     */
     useEffect(() => {
 
         function handleNutritionStateUpdated() {
+
+            setRefreshKey(
+                (previous) => previous + 1
+            );
 
             loadDashboard();
 
@@ -185,7 +218,14 @@ export default function Dashboard() {
                     }}
                 >
 
-                    <NutritionScoreCard />
+                    {/*
+                     * Remount when nutrition state changes so the
+                     * score API is fetched again.
+                     */}
+                    <NutritionScoreCard
+                        key={`nutrition-score-${refreshKey}`}
+                    />
+
 
                     <StatsGrid
                         profile={
@@ -374,7 +414,13 @@ export default function Dashboard() {
                     </div>
 
 
-                    <CaloriesChart />
+                    {/*
+                     * CaloriesChart owns its own API state.
+                     * Remount it whenever nutrition state changes.
+                     */}
+                    <CaloriesChart
+                        key={`calories-chart-${refreshKey}`}
+                    />
 
                 </div>
 
@@ -443,7 +489,12 @@ export default function Dashboard() {
                     </div>
 
 
-                    <TodaysMeals />
+                    {/*
+                     * TodaysMeals already supports refreshKey.
+                     */}
+                    <TodaysMeals
+                        refreshKey={refreshKey}
+                    />
 
                 </div>
 
