@@ -548,7 +548,7 @@ export default function TodayAIPickCard({
                             marginBottom: "10px"
                         }}
                     >
-                        🧠 WHY AI RECOMMENDED THIS
+                        🧠 WHY THIS
                     </div>
 
                     <div
